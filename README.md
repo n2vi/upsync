@@ -1,5 +1,5 @@
 # upsync
-[`upspinfs`](https://github.com/upspin/upspin/blob/master/cmd/upspinfs/doc.go) on Mac and Linux is great, but is not well supported on Windows or BSD.  Although the `upspin` command works fine cross-platform, it is tedious to use for more than occasional file transfers.  The new command `upsync` aims to bridge the gap, helping keep a local disk directory tree in sync with a master version in the Upspin file system.
+[`upspinfs`](https://github.com/upspin/upspin/blob/master/cmd/upspinfs/doc.go) on Mac and Linux is great, but is not well supported on Windows or BSD.  Although the `upspin` command works cross-platform, it is tedious to use for more than occasional file transfers.  The new command `upsync` aims to bridge the gap, helping keep a local disk directory tree in sync with a master version in the Upspin file system.
 
 To start, create a local directory whose path ends in a string that looks like an existing upspin directory, for example on BSD you can `mkdir ~/u/grosse@gmail.com/Public` then `cd` there and execute `upsync.`  Make local edits to the downloaded files or create new files, and then `upsync` to upload your changes to the Upspin master. To discard your local changes, just remove the edited local files and `upsync.`  (Executing both local `rm` and `upspin rm` are required to remove content permanently.)
 
@@ -8,8 +8,8 @@ There are no command flags or config files or environment variables.  Performanc
 Eventually, I hope to solidify FUSE support on Windows and OpenBSD and switch there to the much preferable `upspinfs.`  But even then `upsync` may have some niche benefits:
 * enables work offline, i.e. a workaround for the distributed `upspinfs` we have not yet built
 * offers mitigation of user misfortune, for example when they discard their upspin keys
-* leaves a backup in place in case cloud store or Upspin projects die without warning
-It may also be a useful worked out example for newcomers seeking to write a small Upspin client.
+* provides a worked out example for new Upspin client developers
+* leaves a backup in case cloud store or Upspin projects die without warning
 
 ### Windows checklist
 This tool was written assuming an experienced Upspin user is trying to assist a friend with file sharing or backup.  Here is a checklist if your friend is on Windows 10:
