@@ -5,6 +5,8 @@ To start, create a local directory whose path ends in a string that looks like a
 
 There are no command flags or config files or environment variables.  Performance will be best if `cacheserver` is already running.  To minimize surprise, upsync prints which files it is uploading or downloading and declines to download files larger than 50MB.  It promises never to write outside the starting directory and subdirectories and, as an initial way to enforce that, declines all symlinks.
 
+There are no clever merge heuristics;  copying back and forth proceeds by a trivial "newest wins" rule.  This requires some discipline in remembering to `upsync` after each editing session and is better suited to single person rather than joint editing.  Don't let your computer clocks drift.
+
 Eventually, I hope to solidify FUSE support on Windows and OpenBSD and switch there to the much preferable `upspinfs.`  But even then `upsync` may have some niche benefits:
 * enables work offline, i.e. a workaround for the distributed `upspinfs` we have not yet built
 * offers mitigation of user misfortune, for example when they discard their upspin keys
