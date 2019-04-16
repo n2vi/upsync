@@ -35,7 +35,13 @@ func chk(err error) {
 	}
 }
 
+var lastUpsync int64 // Unix time when upsync was last completed
+
 func main() {
+	wdfi, err := os.Stat(".")
+	chk(err)
+	lastUpsync = wdfi.ModTime().Unix()
+
 	// find first component of current directory that looks like email address
 	// then make wd == upspin working directory
 	wd, err := os.Getwd()
@@ -64,6 +70,10 @@ func main() {
 
 	// start copying
 	upsync(upc, wd, "")
+
+	// try to set mtime of local dir as time of this upsync
+	now := time.Now()
+	_ = os.Chtimes(".", now, now)
 }
 
 func upsync(upc upspin.Client, wd, subdir string) {
@@ -102,7 +112,7 @@ func upsync(upc upspin.Client, wd, subdir string) {
 				chk(err)
 				upsync(upc, wd, pathname+"/")
 			} else if udir[uj].Attr&upspin.AttrLink != 0 {
-				fmt.Println("ignoring upspin symlink", udir[uj].SignedName)
+				fmt.Println("ignoring upspin symlink", pathname)
 			} else if udir[uj].Attr&upspin.AttrIncomplete != 0 {
 				// as indicator of permission issue, create mode 0 length 0 placeholder
 				empty := make([]byte, 0)
@@ -165,6 +175,10 @@ func pull(upc upspin.Client, wd, pathname string, utime int64) {
 }
 
 func push(upc upspin.Client, wd, pathname string, ltime int64) {
+	if ltime < lastUpsync {
+		fmt.Println("skipping old", pathname)
+		return
+	}
 	fmt.Println("push", pathname)
 	bytes, err := ioutil.ReadFile(pathname)
 	chk(err)
