@@ -14,7 +14,7 @@ Eventually, I hope to solidify FUSE support on Windows and OpenBSD and switch th
 * leaves a backup in case cloud store or Upspin projects die without warning
 
 ### Windows checklist
-This tool was written assuming an experienced Upspin user is trying to assist a friend with file sharing or backup.  Here is a checklist if your friend is on Windows 10:
+This tool was written assuming you are an experienced Upspin user trying to assist a friend with file sharing or backup.  Here is a checklist if your friend is on Windows 10:
 1. create or check existing upspin account and permissions  _It is helpful if you can provide them space on an existing server._
 1. confirm `\Users\x\upspin\config` is correct
 1. disk must be NTFS (because FAT has peculiar timestamps)
