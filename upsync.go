@@ -35,17 +35,14 @@ func chk(err error) {
 	}
 }
 
-var lastUpsync int64 // Unix time when upsync was last completed
+var lastUpsync int64 // Unix time when an upsync was last completed
 
 func main() {
-	wdfi, err := os.Stat(".")
-	chk(err)
-	lastUpsync = wdfi.ModTime().Unix()
-
 	// find first component of current directory that looks like email address
 	// then make wd == upspin working directory
-	wd, err := os.Getwd()
+	getwd, err := os.Getwd()
 	chk(err)
+	wd := getwd
 	i := strings.IndexByte(wd, '@')
 	if i < 0 {
 		panic("couldn't find upspin user name in working directory")
@@ -59,7 +56,6 @@ func main() {
 	if slash != "/" {
 		wd = strings.ReplaceAll(wd, slash, "/")
 	}
-	fmt.Println("working directory", wd)
 
 	// initialize upspin client
 	home := config.Home()
@@ -68,12 +64,17 @@ func main() {
 	transports.Init(cfg)
 	upc := client.New(cfg)
 
+	lastUpsyncFi, err := os.Stat(filepath.Join(home, "upspin", "upsync"))
+	if err == os.ErrNotExist {
+		chk(err)
+		lastUpsync = lastUpsyncFi.ModTime().Unix()
+	}
+
 	// start copying
 	upsync(upc, wd, "")
 
-	// try to set mtime of local dir as time of this upsync
-	now := time.Now()
-	_ = os.Chtimes(".", now, now)
+	// save time of this upsync for next upsync "skipping old" heuristic
+	ioutil.WriteFile(filepath.Join(home, "upspin", "upsync"), []byte(getwd), 0644)
 }
 
 func upsync(upc upspin.Client, wd, subdir string) {
