@@ -1,3 +1,15 @@
+
+
+
+
+OBSOLETE; the master copy moved to  https://github.com/upspin/exp
+
+
+
+
+
+
+
 # upsync
 [`upspinfs`](https://github.com/upspin/upspin/blob/master/cmd/upspinfs/doc.go) on Mac and Linux is great, but is not well supported on Windows or BSD.  Although the `upspin` command works cross-platform, it is tedious to use for more than occasional file transfers.  The new command `upsync` aims to bridge the gap, helping keep a local disk directory tree in sync with a master version in the Upspin file system.
 
